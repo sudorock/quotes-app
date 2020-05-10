@@ -1,4 +1,4 @@
-(ns todo-app.todo
+(ns quotes-app.quotes
   (:require [reagent.core :as r]))
 
 (defonce todos (r/atom (sorted-map)))
@@ -6,8 +6,8 @@
 
 (defn delete-todo [id]
   (swap! todos dissoc id)
-  (-> (.fetch js/window "http://localhost/todos" (clj->js {:method "DELETE"})) 
-      (.then #(js/console.dir %)) 
+  (-> (.fetch js/window "http://localhost/todos" (clj->js {:method "DELETE"}))
+      (.then #(js/console.dir %))
       (.catch "hello")))
 
 (defn update-todo [id key val]
@@ -29,26 +29,26 @@
 (defn show-note [id note edit-note show-note-input]
   [:div.btn-container
    [:button {:class "act-btn note"
-             :on-click (fn [_] (swap! show-note-input not))} 
+             :on-click (fn [_] (swap! show-note-input not))}
     [:i.far.fa-sticky-note]]
    (when @show-note-input
      [:form.td-itm-note-form
       [:textarea {:class "note-txt-area"
-                  :value @edit-note 
-                  :form "note-input" 
+                  :value @edit-note
+                  :form "note-input"
                   :on-change #(reset! edit-note (-> % .-target .-value))}]
       [:div.td-itm-note-act-btns
        [:button {:class "dialog-btn ok"
                  :on-click (fn [e]
                              (.preventDefault e)
                              (update-todo id :note @edit-note)
-                             (reset! show-note-input false))} 
+                             (reset! show-note-input false))}
         [:i.fas.fa-check]]
        [:button {:class "dialog-btn cancel"
-                 :on-click (fn [e] 
-                             (.preventDefault e) 
+                 :on-click (fn [e]
+                             (.preventDefault e)
                              (reset! edit-note note)
-                             (reset! show-note-input false))} 
+                             (reset! show-note-input false))}
         [:i.fas.fa-times]]]])])
 
 (defn show-date [id due-date edit-date show-date-input]
@@ -66,7 +66,7 @@
                 :on-click (fn [e]
                             (.preventDefault e)
                             (update-todo id :due-date @edit-date)
-                            (reset! show-date-input false))} 
+                            (reset! show-date-input false))}
        [:i.fas.fa-check]]
       [:button {:class "dialog-btn cancel"
                 :on-click (fn [e]
@@ -79,19 +79,19 @@
   [:div {:class "td-itm-container" :id (.toString id)}
    [:form.td-itm-edit-form
     [:input {:class "td-itm-edit-input"
-             :type "text" :value @edit-input 
+             :type "text" :value @edit-input
              :on-change #(reset! edit-input (-> % .-target .-value))}]
     [:div.td-itm-edit-actions
      [:button {:class "td-itm-editing-act-btn ok"
                :on-click (fn [e]
                            (.preventDefault e)
                            (update-todo id :text @edit-input)
-                           (reset! is-editing false))} 
+                           (reset! is-editing false))}
       [:i.fas.fa-check]]
      [:button {:class "td-itm-editing-act-btn cancel"
                :on-click (fn [e]
                            (.preventDefault e)
-                           (reset! is-editing false))} 
+                           (reset! is-editing false))}
       [:i.fas.fa-times]]]]])
 
 (defn show-todo-item [id text done note due-date is-editing show-date-input show-note-input edit-date edit-note]
@@ -149,4 +149,3 @@
 ;         (println response))))
 
 ; (make-remote-call "http://localhost/index.html")
-

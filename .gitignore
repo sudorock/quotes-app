@@ -1,6 +1,7 @@
 node_modules/
 public/cljs-runtime
 public/main.js
+public/manifest.edn
 
 /target
 /checkouts
